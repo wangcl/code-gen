@@ -1,0 +1,156 @@
+## template for service interface
+package ${rootPackage}.${pkgController};
+
+import ${rootPackage}.${pkgPojo}.${table.capitalName};
+import ${rootPackage}.${pkgService}.${table.capitalName}Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ */
+@Controller
+@RequestMapping("/${table.name}")
+public class ${table.capitalName}Controller {
+
+	@Autowired
+	private ${table.capitalName}Service ${table.name}Service;
+
+	/**
+	 * 显示首页面<br>
+	 * GET: /{model}<br>
+	 * 返回: {model}/index.jsp
+	 */
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public String index() {
+		return "${table.name}/index";
+	}
+
+	/**
+	 * 显示新增页面<br>
+	 * GET: /{model}/input<br>
+	 * 返回: {model}/input.jsp
+	 */
+	@RequestMapping(value = "/input", method = RequestMethod.GET)
+	public String input() {
+		return "${table.name}/input";
+	}
+
+	/**
+	 * 新增页面提交保存后执行<br>
+	 * POST: /{model}<br>
+	 * 返回: json数据
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	@ResponseBody
+	public JsonResult create(${table.capitalName} ${table.name}) {
+		JsonResult json = new JsonResult();
+		json.setStatus(0);
+		json.setMessage("新增成功");
+
+		// TODO: 设置${table.name}属性，如：默认值
+
+		try {
+			${table.name}Service.create${table.capitalName}(${table.name});
+		} catch (Exception e) {
+			json.setStatus(-1);
+			json.setMessage(e.getMessage());
+		}
+
+		return json;
+	}
+
+	/**
+	 * 点击查询按钮后执行<br>
+	 * POST: /{model}/search<br>
+	 * 返回: json数组
+	 */
+	@RequestMapping(value = "/search", method = RequestMethod.POST)
+	@ResponseBody
+	public List<${table.capitalName}> search(/* @RequestParam(required = false) type1 param1, ... */) {
+		// TODO: 处理查询参数，如：格式转换
+
+		List<${table.capitalName}> ${table.name}s = ${table.name}Service.get${table.capitalName}List(/* param1, ... */);
+
+		return ${table.name}s;
+	}
+
+	/**
+	 * 列表页面点击修改单条记录时执行<br>
+	 * GET: /{model}/{id}/edit<br>
+	 * 返回: {model}/edit.jsp
+	 */
+	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
+	public ModelAndView edit(@PathVariable("id") String id) {
+		ModelAndView mv = new ModelAndView("${table.name}/edit");
+		${table.capitalName} ${table.name} = ${table.name}Service.get${table.capitalName}(id);
+		mv.addObject("${table.name}", ${table.name});
+		return mv;
+	}
+
+	/**
+	 * 修改页面提交保存后执行<br>
+	 * PUT: /{model}/{id}<br>
+	 * 返回: json数据
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	@ResponseBody
+	public JsonResult update(@PathVariable("id") String id, ${table.capitalName} ${table.name}) {
+		JsonResult json = new JsonResult();
+		json.setStatus(0);
+		json.setMessage("修改成功");
+
+		${table.name}.set${pk.capitalName}(${pk.name});
+		try {
+			${table.name}Service.update${table.capitalName}(${table.name});
+		} catch (Exception e) {
+			json.setStatus(-1);
+			json.setMessage(e.getMessage());
+		}
+
+		return json;
+	}
+
+	/**
+	 * 列表页面点击显示单条记录时执行<br>
+	 * GET: /{model}/{id}<br>
+	 * 返回: {model}/view.jsp
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ModelAndView view(@PathVariable("id") String id) {
+		ModelAndView mv = new ModelAndView("${table.name}/view");
+		${table.capitalName} ${table.name} = ${table.name}Service.get${table.capitalName}(${pk.name});
+		mv.addObject("${table.name}", ${table.name});
+		return mv;
+	}
+
+	/**
+	 * 列表页面删除记录时执行<br>
+	 * DELETE: /{model}/{id}<br>
+	 * 返回: json数据
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@ResponseBody
+	public JsonResult delete(@PathVariable("id") String id) {
+		JsonResult json = new JsonResult();
+		json.setStatus(0);
+		json.setMessage("删除成功");
+
+		try {
+			${table.name}Service.remove${table.capitalName}(${pk.name});
+		} catch (Exception e) {
+			json.setStatus(-1);
+			json.setMessage(e.getMessage());
+		}
+
+		return json;
+	}
+
+}

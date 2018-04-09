@@ -1,0 +1,23 @@
+## template for service interface
+package ${rootPackage}.${pkgService};
+
+import ${rootPackage}.${pkgPojo}.${table.capitalName};
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ */
+public interface ${table.capitalName}Service {
+
+	${pk.type} create${table.capitalName}(${table.capitalName} ${table.name});
+
+	void update${table.capitalName}(${table.capitalName} ${table.name});
+
+	void remove${table.capitalName}(${pk.type} ${pk.name});
+
+	${table.capitalName} get${table.capitalName}(${pk.type} ${pk.name});
+
+	List<${table.capitalName}> get${table.capitalName}List(/* type1 param1, type2 param2, ... */);
+
+}

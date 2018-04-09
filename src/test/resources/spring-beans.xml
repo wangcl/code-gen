@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 加载配置文件 -->
+	<bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location" value="classpath:/config.properties"/>
+	</bean>
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties" ref="config"/>
+	</bean>
+
+	<!-- 配置dbcp数据源 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}"/>
+		<property name="url" value="${jdbc.url}"/>
+		<property name="username" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+
+		<property name="testOnBorrow" value="true"/>
+		<property name="testOnReturn" value="true"/>
+		<property name="testWhileIdle" value="true"/>
+		<property name="validationQuery" value="SELECT 1 FROM DUAL"/>
+		<property name="defaultAutoCommit" value="false"/>
+		<property name="maxIdle" value="5"/>
+		<property name="maxActive" value="20"/>
+		<property name="minEvictableIdleTimeMillis" value="180000"/>
+		<property name="timeBetweenEvictionRunsMillis" value="360000"/>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!-- mybatis config -->
+	<bean id="vendorProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="Oracle">oracle</prop>
+				<prop key="MySQL">mysql</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+		<property name="properties" ref="vendorProperties"/>
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="databaseIdProvider" ref="databaseIdProvider"/>
+		<property name="configLocation">
+			<value>classpath:mybatis-config.xml</value>
+		</property>
+	</bean>
+
+	<!-- mybatis mappers, scanned automatically -->
+	<!--
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage">
+			<value>
+				me.wangcl.persistence
+			</value>
+		</property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	-->
+
+	<bean id="codeGenerator" class="me.wangcl.codegen.CodeGenerator" init-method="init">
+		<property name="author" value="${author}"/>
+		<property name="dialect" value="${dialect}"/>
+		<property name="pkGen" value="${pk.gen}"/>
+		<property name="schemaName" value="${db.schema}"/>
+		<property name="tableName" value="${db.table}"/>
+		<property name="tablePrefix" value="${table.prefix}"/>
+		<property name="rootPackage" value="${rootPackage}"/>
+		<property name="outputPath" value="${outputPath}"/>
+		<property name="pkgPojo" value="${package.pojo}"/>
+		<property name="pkgDao" value="${package.dao}"/>
+		<property name="pkgService" value="${package.service}"/>
+		<property name="pkgServiceImpl" value="${package.service.impl}"/>
+		<property name="pkgController" value="${package.controller}"/>
+
+		<property name="generators">
+			<list>
+				<ref bean="pojoEntityGenerator"/>
+				<ref bean="mybatisMapperGenerator"/>
+				<ref bean="mybatisMapperTestGenerator"/>
+				<ref bean="serviceGenerator"/>
+				<ref bean="controllerGenerator"/>
+				<ref bean="jspGenerator"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="pojoEntityGenerator" class="me.wangcl.codegen.generator.PojoEntityVelocityGenerator"/>
+	<bean id="mybatisMapperGenerator" class="me.wangcl.codegen.generator.MyBatisMapperVelocityGenerator"/>
+	<bean id="mybatisMapperTestGenerator" class="me.wangcl.codegen.generator.MyBatisMapperTestVelocityGenerator"/>
+	<bean id="serviceGenerator" class="me.wangcl.codegen.generator.ServiceVelocityGenerator"/>
+	<bean id="controllerGenerator" class="me.wangcl.codegen.generator.ControllerVelocityGenerator"/>
+	<bean id="jspGenerator" class="me.wangcl.codegen.generator.JspVelocityGenerator"/>
+
+	<bean id="db2JavaNameConverter" class="me.wangcl.codegen.util.Db2JavaNameConverter"/>
+	<bean id="db2JavaTypeConverter" class="me.wangcl.codegen.util.Db2JavaTypeConverter"/>
+	<bean id="java2MyBatisTypeAliasConverter" class="me.wangcl.codegen.util.Java2MyBatisTypeAliasConverter"/>
+	<bean id="metaType2MyBatisJdbcTypeConverter" class="me.wangcl.codegen.util.MetaType2MyBatisJdbcTypeConverter"/>
+
+</beans>

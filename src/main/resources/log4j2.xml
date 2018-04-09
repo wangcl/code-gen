@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Appenders>
+		<Console name="CONSOLE" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{mm:ss} %-5p %C{1} (%F:%L) - %m%n" charset="UTF-8"/>
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="me.wangcl" level="debug">
+			<AppenderRef ref="CONSOLE"/>
+		</Logger>
+		<Root level="off"/>
+	</Loggers>
+</Configuration>

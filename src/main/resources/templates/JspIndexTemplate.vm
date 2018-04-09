@@ -1,0 +1,175 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>${table.metaComment}管理</title>
+</head>
+<body>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		${table.metaComment}管理
+		<small><i>管理${table.metaComment}信息</i></small>
+	</h1>
+</section>
+<!-- Main content -->
+<section class="content">
+	<!-- 查询条件 -->
+	<div class="box box-primary">
+		<div class="box-header with-border">
+			<h5 class="box-title">
+				<i class="fa fa-book"></i> 查询条件
+			</h5>
+			<div class="box-tools pull-right">
+				<button type="button" class="btn btn-box-tool" data-widget="collapse">
+					<i class="fa fa-minus"></i>
+				</button>
+			</div>
+		</div>
+		<!-- 查询条件表单 -->
+		<div class="box-body">
+			<div class="row">
+				<form id="searchForm">
+					<div class="col-sm-3">
+						<div class="input-group">
+							<div class="input-group-addon">
+								<i class="fa"><span>id</span></i><!-- 调整查询参数 -->
+							</div>
+							<input id="id" type="text" class="form-control" name="id" placeholder="请输入">
+						</div>
+					</div>
+					<div class="col-sm-9">
+						<a type="button" class="btn btn-small btn-primary" href="#" id="searchBtn">
+							<i class='fa fa-search'></i>&nbsp;&nbsp;查询
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- 数据表格 -->
+	<div class="box box-primary">
+		<div class="box-header with-border">
+			<h5 class="box-title"><i class="fa fa-th"></i> 查询结果</h5>
+			<div class="box-tools pull-right" id="data-table-buttons"></div>
+		</div>
+		<div class="box-body">
+			<table id="dataTable" class="table table-bordered table-striped">
+				<thead>
+				<tr>
+					<th>ID</th>
+					<th>id</th><!-- 调整显示列 -->
+					<th>操作</th>
+				</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+
+</section>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		// 定位功能菜单
+		highlightMenuItem('', '${table.name}'); // 设置菜单id
+
+		<!-- 数据表格处理 -->
+		var table = $('#dataTable').DataTable({
+			ajax: {
+				url: "${ctx}/${table.name}/search",
+				data: function (d) {
+					var formArray = $('#searchForm').serializeArray();
+					for (var i = 0; i < formArray.length; i++) {
+						d[formArray[i]['name']] = formArray[i]['value'];
+					}
+				},
+				dataSrc: '', // 因返回数组，此处为空
+				type: "POST"
+			},
+			columns: [
+				{data: "${pk.name}", visible: false},
+				{data: "id", orderable: false}, // 调整显示列
+				{data: null, orderable: false}
+			],
+			columnDefs: [
+				{
+					targets: 2, // 0-based，与columns中的"操作"一栏对应
+					render: function (data, type, row, meta) {
+						var operations = '';
+
+						// 查看
+						operations += '<a href="#" onclick=view(\'' + row.id + '\')>'
+								+ '<i class="fa fa-info"></i>&nbsp;查看</a>';
+
+						// 修改
+						operations += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+						operations += '<a href="#" onclick=edit(\'' + row.id + '\')>'
+								+ '<i class="fa fa-pencil"></i>&nbsp;修改</a>';
+
+						// 删除
+						operations += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+						operations += '<a href="#" onclick=del(\'' + row.id + '\')>'
+								+ '<i class="fa fa-trash"></i>&nbsp;删除</a>';
+
+						return operations;
+					}
+				}
+			],
+			pageLength: 5
+		});
+
+		new $.fn.dataTable.Buttons(table, {
+			buttons: [
+				{
+					extend: 'pageLength'
+				},
+				{
+					extend: 'btnCreate',
+					url: "${ctx}/${table.name}/input",
+					modelWidth: 500,
+					modelHeight: 500
+				}
+			]
+		});
+		table.buttons(0, null).container().appendTo('#data-table-buttons');
+
+		$("#searchBtn").on("click", function () {
+			table.ajax.reload();
+		});
+
+	});
+
+	function view(id) {
+		openModal("${ctx}/${table.name}/" + id, 500, 400);
+	}
+
+	function edit(id) {
+		openModal("${ctx}/${table.name}/" + id + "/edit", 550, 550);
+	}
+
+	function del(id) {
+		swal({
+			title: "您确定要删除吗？",
+			text: "将有 1 条记录被删除",
+			type: "warning",
+			showCancelButton: true,
+			closeOnConfirm: false,
+			confirmButtonText: "是的，我要删除",
+			cancelButtonText: "取消",
+			confirmButtonColor: "#DD6B55"
+		}, function () {
+			$.post("${ctx}/${table.name}/" + id, {_method: "DELETE"}, function (data) {
+				swal.close();
+				$('#dataTable').DataTable().ajax.reload();
+			})
+		});
+	}
+</script>
+</body>
+</html>

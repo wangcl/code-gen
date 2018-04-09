@@ -1,0 +1,53 @@
+## template for entity
+package ${rootPackage}.${pkgPojo};
+
+import java.io.Serializable;
+import java.util.*;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+/**
+ * 数据库表实体对象：<code>${table.metaTableName}</code>#if ($table.metaComment) (${table.metaComment})
+#else
+
+#end
+ *
+ * @author ${author}
+ */
+public class ${table.capitalName} implements Serializable {
+
+#foreach ($column in $columns)
+	private ${column.type} ${column.name};#if ($column.metaComment) // ${column.metaComment}
+#else
+
+#end
+#end
+
+#foreach ($column in $columns)
+	public void set${column.capitalName}(${column.type} ${column.name}) {
+		this.${column.name} = ${column.name};
+	}
+
+	public ${column.type} get${column.capitalName}() {
+		return ${column.name};
+	}
+
+#end
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return EqualsBuilder.reflectionEquals(this, o);
+	}
+
+	@Override
+	public int hashCode() {
+		return HashCodeBuilder.reflectionHashCode(this);
+	}
+
+}

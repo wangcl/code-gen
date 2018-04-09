@@ -1,0 +1,36 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>查看${table.metaComment}信息</title>
+</head>
+<body>
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">查看${table.metaComment}</h4>
+</div>
+<div class="modal-body">
+	<div class="content scroller">
+#foreach ($column in $columns)
+#if (!$column.pk)
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="${column.name}">${column.metaComment}</label>
+			<div class="col-sm-10">
+				<p id="${column.name}" class="form-control-static">${${table.name}.${column.name}}</p>
+			</div>
+		</div>
+#end
+#end
+	</div>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+</div>
+</body>
+</html>

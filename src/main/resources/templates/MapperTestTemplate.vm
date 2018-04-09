@@ -1,0 +1,88 @@
+## template for mybatis mapper unit test
+package ${rootPackage}.${pkgDao};
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import ${rootPackage}.${pkgPojo}.${table.capitalName};
+
+import static org.junit.Assert.*;
+
+/**
+ * @author ${author}
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:spring-beans-test.xml"})
+public class ${table.capitalName}MapperTest {
+	private static Logger logger = LoggerFactory.getLogger(${table.capitalName}MapperTest.class);
+
+	private ${table.capitalName}Mapper ${table.name}Mapper;
+
+	@Autowired
+	public void set${table.capitalName}Mapper(${table.capitalName}Mapper ${table.name}Mapper) {
+		this.${table.name}Mapper = ${table.name}Mapper;
+	}
+
+	@BeforeClass
+	public static void setUpClass() {
+	}
+
+	@AfterClass
+	public static void tearDownClass() {
+	}
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testCRUD() {
+		// init data
+		${table.capitalName} ${table.name} = initData();
+		${pk.type} ${pk.name};
+		${table.capitalName} result;
+
+		// insert
+		${table.name}Mapper.insert(${table.name});
+		${pk.name} = ${table.name}.get${pk.capitalName}();
+		assertNotNull(${pk.name});
+		// TODO: add some assert statements here
+		logger.debug("[${pk.name}: " + ${pk.name} + "]");
+
+		// selectOne
+		result = ${table.name}Mapper.selectOne(${pk.name});
+		assertNotNull(result);
+		// TODO: add some assert statements here
+
+		// update
+		// TODO: set some new value
+		${table.name}Mapper.update(${table.name});
+		result = ${table.name}Mapper.selectOne(${pk.name});
+		// TODO: add some assert statements here
+
+		// delete
+		${table.name}Mapper.delete(${pk.name});
+		result = ${table.name}Mapper.selectOne(${pk.name});
+		assertNull(result);
+	}
+
+	private ${table.capitalName} initData() {
+		${table.capitalName} ${table.name} = new ${table.capitalName}();
+		// TODO: set fields here
+		return ${table.name};
+	}
+
+}

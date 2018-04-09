@@ -1,0 +1,26 @@
+## template for mybatis mapper
+package ${rootPackage}.${pkgDao};
+
+import ${rootPackage}.${pkgPojo}.${table.capitalName};
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ */
+@Mapper
+public interface ${table.capitalName}Mapper {
+
+	void insert(${table.capitalName} ${table.name});
+
+	void update(${table.capitalName} ${table.name});
+
+	void delete(${pk.type} ${pk.name});
+
+	${table.capitalName} selectOne(${pk.type} ${pk.name});
+
+	List<${table.capitalName}> selectList(/* @Param("param1") type1 param1, @Param("param2") type2 param2, ... */);
+
+}

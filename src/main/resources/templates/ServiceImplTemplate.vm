@@ -1,0 +1,55 @@
+## template for service implementation
+package ${rootPackage}.${pkgServiceImpl};
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ${rootPackage}.${pkgPojo}.${table.capitalName};
+import ${rootPackage}.${pkgDao}.${table.capitalName}Mapper;
+import ${rootPackage}.${pkgService}.${table.capitalName}Service;
+
+import java.util.List;
+
+/**
+ * @author ${author}
+ */
+@Service
+@Transactional
+public class ${table.capitalName}ServiceImpl implements ${table.capitalName}Service {
+	private ${table.capitalName}Mapper ${table.name}Mapper;
+
+	@Autowired
+	public void set${table.capitalName}Mapper(${table.capitalName}Mapper ${table.name}Mapper) {
+		this.${table.name}Mapper = ${table.name}Mapper;
+	}
+
+	@Override
+	public ${pk.type} create${table.capitalName}(${table.capitalName} ${table.name}) {
+    	${table.name}Mapper.insert(${table.name});
+		return ${table.name}.get${pk.capitalName}();
+    }
+
+	@Override
+	public void update${table.capitalName}(${table.capitalName} ${table.name}) {
+		${table.name}Mapper.update(${table.name});
+	}
+
+	@Override
+	public void remove${table.capitalName}(${pk.type} ${pk.name}) {
+		${table.name}Mapper.delete(${pk.name});
+	}
+
+    @Override
+	@Transactional(readOnly = true)
+	public ${table.capitalName} get${table.capitalName}(${pk.type} ${pk.name}) {
+		return ${table.name}Mapper.selectOne(${pk.name});
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<${table.capitalName}> get${table.capitalName}List(/* type1 param1, type2 param2, ... */) {
+		return ${table.name}Mapper.selectList(/* param1, param2, ... */);
+	}
+
+}

@@ -1,0 +1,90 @@
+## template for mybatis mapper xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${rootPackage}.${pkgDao}.${table.capitalName}Mapper">
+#if ($dialect == "oracle")
+	<insert id="insert" parameterType="${rootPackage}.${pkgPojo}.${table.capitalName}">
+		<selectKey keyProperty="${pk.name}" resultType="${pk.myBatisTypeAlias}" order="BEFORE">
+#if ($pkGen == "seq")
+			SELECT SEQ_${pk.metaColumnName}.NEXTVAL FROM DUAL
+#end
+#if ($pkGen == "guid")
+			SELECT SYS_GUID() FROM DUAL
+#end
+		</selectKey>
+#end
+#if ($dialect == "mysql")
+	<insert id="insert" parameterType="${rootPackage}.${pkgPojo}.${table.capitalName}" useGeneratedKeys="true" keyProperty="${pk.name}">
+#end
+		INSERT INTO ${table.metaTableName} (
+#set ($count = $columns.size())
+#foreach ($column in $columns)
+#if ($count == 1)
+			${column.metaColumnName}
+#else
+			${column.metaColumnName},
+#end
+#set ($count = $count - 1)
+#end
+		) VALUES (
+#set ($count = $columns.size())
+#foreach ($column in $columns)
+#if ($count == 1)
+			#{${column.name}, jdbcType=${column.myBatisJdbcType}}
+#else
+			#{${column.name}, jdbcType=${column.myBatisJdbcType}},
+#end
+#set ($count = $count - 1)
+#end
+		)
+	</insert>
+
+	<update id="update" parameterType="${rootPackage}.${pkgPojo}.${table.capitalName}">
+		UPDATE ${table.metaTableName}
+		<set>
+#foreach ($column in $columns)
+#if (!$column.pk)
+			<if test="${column.name}!=null">${column.metaColumnName}=#{${column.name}},</if>
+#end
+#end
+		</set>
+		WHERE
+			${pk.metaColumnName}=#{${pk.name}}
+	</update>
+
+	<delete id="delete" parameterType="${pk.myBatisTypeAlias}">
+		DELETE FROM ${table.metaTableName}
+		WHERE
+			${pk.metaColumnName}=#{${pk.name}}
+	</delete>
+
+	<sql id="sqlColumns">
+#set ($count = $columns.size())
+#foreach ($column in $columns)
+#if ($count == 1)
+		${column.metaColumnName} ${column.name}
+#else
+		${column.metaColumnName} ${column.name},
+#end
+#set ($count = $count - 1)
+#end
+	</sql>
+
+	<select id="selectOne" resultType="${rootPackage}.${pkgPojo}.${table.capitalName}">
+		SELECT
+			<include refid="sqlColumns"/>
+		FROM ${table.metaTableName}
+		WHERE
+			${pk.metaColumnName}=#{${pk.name}}
+	</select>
+
+	<select id="selectList" resultType="${rootPackage}.${pkgPojo}.${table.capitalName}">
+		SELECT
+			<include refid="sqlColumns"/>
+		FROM ${table.metaTableName}
+		WHERE
+			1=1
+			<!-- <if test="param!=null and param!=''">AND PARAM=#{param}</if>-->
+			<!-- <if test="param!=null and param!=''">AND PARAM LIKE #{param}||'%'</if>-->
+	</select>
+</mapper>
