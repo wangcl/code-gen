@@ -205,14 +205,6 @@ public final class CodeGenerator {
 		// 检验tableName不为空
 		if (StringUtil.isBlank(tableName)) {
 			throw new IllegalArgumentException("未指定表名参数：tableName");
-		} else {
-			// 将表名置为小写
-			tableName = tableName.toLowerCase();
-		}
-
-		// 将表名前缀置为小写
-		if (StringUtil.isNotBlank(tablePrefix)) {
-			tablePrefix = tablePrefix.toLowerCase();
 		}
 
 		// 设置包名的默认值
