@@ -1,12 +1,13 @@
 package me.wangcl.codegen.util;
 
 /**
- * 数据库表字段信息对象。
+ * 数据库表字段信息对象。<br>
+ * 带有<code>meta</code>前缀的是数据库相关信息。
  *
  * @author wangcl
  */
 public class Column {
-	// java field name, eg. userId
+	// java field name in camel case, with first letter in lower case. eg. userId
 	private String name;
 
 	// first letter in upper case, eg. UserId
@@ -21,8 +22,10 @@ public class Column {
 	// eg. NUMERIC, VARCHAR
 	private String myBatisJdbcType;
 
+	// if the column is primary key
 	private boolean pk = false;
 
+	// if the column can be null or not
 	private boolean nullable = true;
 
 	// database column name, eg. USER_ID
@@ -43,7 +46,7 @@ public class Column {
 	// the sql "as" clause, or column name if no "as"
 	private String metaLabel;
 
-	// comment for column
+	// comment for the column
 	private String metaComment;
 
 	public String getName() {

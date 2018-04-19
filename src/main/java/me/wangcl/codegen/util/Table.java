@@ -4,10 +4,10 @@ package me.wangcl.codegen.util;
  * @author wangcl
  */
 public class Table {
-	// table name, eg. sysUser
+	// table name in camel case, with the first letter in lower case. eg. sysUser
 	private String name;
 
-	// first letter upper case, eg. SysUser
+	// first letter in upper case, eg. SysUser
 	private String capitalName;
 
 	// database table name, eg. SYS_USER
