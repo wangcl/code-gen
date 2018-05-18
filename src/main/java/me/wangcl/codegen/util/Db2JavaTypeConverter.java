@@ -11,7 +11,7 @@ public class Db2JavaTypeConverter implements Converter<Column, String> {
 		String type;
 		String metaType = column.getMetaTypeName();
 		// TODO: more meta types support
-		if ("NUMBER".equals(metaType) || "INT".equals(metaType) || "BIGINT".equals(metaType)) {
+		if ("NUMBER".equals(metaType) || "INT".equals(metaType) || "BIGINT".equals(metaType) || "TINYINT".equals(metaType)) {
 			int precision = column.getMetaPrecision();
 			int scale = column.getMetaScale();
 			if (scale == 0) {
