@@ -20,7 +20,7 @@ public class MetaType2MyBatisJdbcTypeConverter implements Converter<String, Stri
 				to = "VARCHAR";
 				break;
 			case "DATETIME":
-				to = "DATE";
+				to = "TIMESTAMP";
 				break;
 			default:
 				to = from;
