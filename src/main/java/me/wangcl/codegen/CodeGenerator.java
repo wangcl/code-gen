@@ -229,7 +229,7 @@ public final class CodeGenerator {
 		table = new Table();
 		columns = new ArrayList<>();
 
-		table.setMetaTableName(StringUtil.toUpperCase(tableName));
+		table.setMetaTableName(tableName);
 
 		// 如果表有在代码中无意义的前缀，则将其删除。例如：表名有"T_"前缀，代码中不需要此前缀。
 		if (StringUtil.isNotBlank(tablePrefix) && tableName.startsWith(tablePrefix)) {
@@ -254,7 +254,7 @@ public final class CodeGenerator {
 			// 获取表信息
 			if ("oracle".equals(dialect)) {
 				trs = st.executeQuery("SELECT COMMENTS FROM USER_TAB_COMMENTS WHERE TABLE_NAME='" + table
-						.getMetaTableName().toUpperCase() + "'");
+						.getMetaTableName() + "'");
 				if (trs.next()) {
 					String remarks = trs.getString("COMMENTS");
 					if (StringUtil.isNotBlank(remarks)) {
@@ -263,8 +263,7 @@ public final class CodeGenerator {
 				}
 			} else if ("mysql".equals(dialect)) {
 				trs = st.executeQuery("SELECT TABLE_COMMENT FROM INFORMATION_SCHEMA.TABLES" +
-						" WHERE TABLE_SCHEMA='" + schemaName.toLowerCase() + "' AND TABLE_NAME='" +
-						table.getMetaTableName().toLowerCase() + "'");
+						" WHERE TABLE_SCHEMA='" + schemaName + "' AND TABLE_NAME='" + table.getMetaTableName() + "'");
 				if (trs.next()) {
 					String remarks = trs.getString("TABLE_COMMENT");
 					if (StringUtil.isNotBlank(remarks)) {
@@ -272,8 +271,7 @@ public final class CodeGenerator {
 					}
 				}
 			} else {
-				trs = dbmd.getTables(null, schemaName.toUpperCase(), table.getMetaTableName().toUpperCase(), new
-						String[]{"TABLE"});
+				trs = dbmd.getTables(null, schemaName, table.getMetaTableName(), new String[]{"TABLE"});
 				if (trs.next()) {
 					String remarks = trs.getString("REMARKS"); // DOES NOT WORK for oracle and mysql
 					if (StringUtil.isNotBlank(remarks)) {
@@ -283,7 +281,7 @@ public final class CodeGenerator {
 			}
 
 			// 获取主键信息
-			pkrs = dbmd.getPrimaryKeys(null, schemaName.toUpperCase(), table.getMetaTableName().toUpperCase());
+			pkrs = dbmd.getPrimaryKeys(null, schemaName, table.getMetaTableName());
 			List<String> pks = new ArrayList<>();
 			while (pkrs.next()) {
 				String pk = pkrs.getString("COLUMN_NAME");
@@ -294,7 +292,7 @@ public final class CodeGenerator {
 			Map<String, String> columnCommentMap = new HashMap<>();
 			if ("oracle".equals(dialect)) {
 				crs = st.executeQuery("SELECT COLUMN_NAME, COMMENTS FROM USER_COL_COMMENTS WHERE TABLE_NAME='" +
-						table.getMetaTableName().toUpperCase() + "'");
+						table.getMetaTableName() + "'");
 				while (crs.next()) {
 					String remarks = crs.getString("COMMENTS");
 					if (StringUtil.isNotBlank(remarks)) {
@@ -302,7 +300,7 @@ public final class CodeGenerator {
 					}
 				}
 			} else {
-				crs = dbmd.getColumns(null, schemaName.toUpperCase(), table.getMetaTableName().toUpperCase(), "%");
+				crs = dbmd.getColumns(null, schemaName, table.getMetaTableName(), "%");
 				while (crs.next()) {
 					String remarks = crs.getString("REMARKS");
 					if (StringUtil.isNotBlank(remarks)) {
