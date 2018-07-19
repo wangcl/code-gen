@@ -14,7 +14,15 @@
 		</selectKey>
 #end
 #if ($dialect == "mysql")
+#if ($pkGen == "seq")
 	<insert id="insert" parameterType="${rootPackage}.${pkgPojo}.${table.capitalName}" useGeneratedKeys="true" keyProperty="${pk.name}">
+#end
+#if ($pkGen == "guid")
+	<insert id="insert" parameterType="${rootPackage}.${pkgPojo}.${table.capitalName}">
+		<selectKey keyProperty="id" resultType="string" order="BEFORE">
+			SELECT replace(uuid(),'-','')
+		</selectKey>
+#end
 #end
 		INSERT INTO ${table.metaTableName} (
 #set ($count = $columns.size())
