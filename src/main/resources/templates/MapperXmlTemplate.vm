@@ -93,6 +93,11 @@
 		WHERE
 			1=1
 			<!-- <if test="param!=null and param!=''">AND PARAM=#{param}</if>-->
+#if ($dialect == "oracle")
 			<!-- <if test="param!=null and param!=''">AND PARAM LIKE #{param}||'%'</if>-->
+#end
+#if ($dialect == "mysql")
+			<!-- <if test="param!=null and param!=''">AND PARAM LIKE CONCAT('%', #{examName}, '%')</if>-->
+#end
 	</select>
 </mapper>
