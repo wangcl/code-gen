@@ -90,8 +90,7 @@
 		SELECT
 			<include refid="sqlColumns"/>
 		FROM ${table.metaTableName}
-		WHERE
-			1=1
+		<where>
 			<!-- <if test="param!=null and param!=''">AND PARAM=#{param}</if>-->
 #if ($dialect == "oracle")
 			<!-- <if test="param!=null and param!=''">AND PARAM LIKE #{param}||'%'</if>-->
@@ -99,5 +98,6 @@
 #if ($dialect == "mysql")
 			<!-- <if test="param!=null and param!=''">AND PARAM LIKE CONCAT('%', #{examName}, '%')</if>-->
 #end
+		</where>
 	</select>
 </mapper>
