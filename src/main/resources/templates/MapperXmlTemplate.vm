@@ -100,4 +100,13 @@
 #end
 		</where>
 	</select>
+
+	<resultMap id="${table.name}Map" type="${rootPackage}.${pkgPojo}.${table.capitalName}">
+		<id property="${pk.name}" column="${pk.metaColumnName}"/>
+#foreach ($column in $columns)
+#if (!$column.pk)
+	    <result property="${column.name}" column="${column.metaColumnName}"/>
+#end
+#end
+    </resultMap>
 </mapper>
