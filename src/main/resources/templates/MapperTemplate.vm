@@ -8,6 +8,11 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
+ * 数据库表mapper接口：<code>${table.metaTableName}</code>#if ($table.metaComment) (${table.metaComment})
+#else
+
+#end
+ *
  * @author ${author}
  */
 @Mapper
