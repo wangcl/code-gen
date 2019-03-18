@@ -18,14 +18,40 @@ import java.util.List;
 @Mapper
 public interface ${table.capitalName}Mapper {
 
+	/**
+	 * 插入新数据。
+	 *
+	 * @param ${table.name} 数据
+	 */
 	void insert(${table.capitalName} ${table.name});
 
+	/**
+	 * 根据主键更新指定数据。
+	 *
+	 * @param ${table.name} 新数据
+	 */
 	void update(${table.capitalName} ${table.name});
 
+	/**
+	 * 根据主键删除指定数据。
+	 *
+	 * @param ${pk.name} 主键
+	 */
 	void delete(${pk.type} ${pk.name});
 
+	/**
+	 * 根据主键查询。
+	 *
+	 * @param ${pk.name} 主键
+	 * @return 数据
+	 */
 	${table.capitalName} selectOne(${pk.type} ${pk.name});
 
+	/**
+	 * 查询列表。
+	 *
+	 * @return 数据列表
+	 */
 	List<${table.capitalName}> selectList(/* @Param("param1") type1 param1, @Param("param2") type2 param2, ... */);
 
 	/**
