@@ -28,4 +28,16 @@ public interface ${table.capitalName}Mapper {
 
 	List<${table.capitalName}> selectList(/* @Param("param1") type1 param1, @Param("param2") type2 param2, ... */);
 
+	/**
+	 * 分页查询列表。
+	 *
+	 * @param pageNum 第几页
+	 * @param pageSize 每页几条
+	 * @return 数据列表
+	 */
+	List<${table.capitalName}> selectList(/* @Param("param1") type1 param1, @Param("param2") type2 param2, ... */
+		@Param("pageNum") int pageNum,
+		@Param("pageSize") int pageSize
+	);
+
 }

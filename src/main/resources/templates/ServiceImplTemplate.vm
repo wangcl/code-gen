@@ -56,4 +56,10 @@ public class ${table.capitalName}ServiceImpl implements ${table.capitalName}Serv
 		return ${table.name}Mapper.selectList(/* param1, param2, ... */);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public List<${table.capitalName}> get${table.capitalName}List(int pageNum, int pageSize) {
+		return ${table.name}Mapper.selectList(pageNum, pageSize);
+	}
+
 }

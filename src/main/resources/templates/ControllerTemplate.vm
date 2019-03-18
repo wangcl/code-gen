@@ -3,6 +3,7 @@ package ${rootPackage}.${pkgController};
 
 import ${rootPackage}.${pkgPojo}.${table.capitalName};
 import ${rootPackage}.${pkgService}.${table.capitalName}Service;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,6 +81,32 @@ public class ${table.capitalName}Controller {
 		List<${table.capitalName}> ${table.name}s = ${table.name}Service.get${table.capitalName}List(/* param1, ... */);
 
 		return ${table.name}s;
+	}
+
+	/**
+	 * 点击查询按钮后执行（物理分页）<br>
+	 * POST: /{model}/query<br>
+	 * 返回: json数据
+	 */
+	@RequestMapping(value = "/query", method = RequestMethod.POST)
+	@ResponseBody
+	public DataTablesPagingResult<${table.capitalName}> query(HttpServletRequest request/*, @RequestParam(required = false) type1 param1, ... */) {
+		DataTablesPagingRequest dt = DataTablesUtils.processPagingRequest(request);
+
+		int pageSize = dt.getLength();
+		int pageNum = dt.getStart() / dt.getLength() + 1;
+
+		// 通过PageHelper插件实现分页查询
+		List<${table.capitalName}> ${table.name}s = ${table.name}Service.get${table.capitalName}List(pageNum, pageSize);
+		PageInfo page = new PageInfo(${table.name}s);
+
+		DataTablesPagingResult<${table.name}> pr = new DataTablesPagingResult<>();
+		pr.setData(${table.name}s);
+		pr.setRecordsTotal(page.getTotal());
+		pr.setRecordsFiltered(page.getTotal());
+		pr.setDraw(Integer.valueOf(dt.getDraw()));
+
+		return pr;
 	}
 
 	/**

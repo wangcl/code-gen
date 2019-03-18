@@ -20,4 +20,6 @@ public interface ${table.capitalName}Service {
 
 	List<${table.capitalName}> get${table.capitalName}List(/* type1 param1, type2 param2, ... */);
 
+	List<${table.capitalName}> get${table.capitalName}List(int pageNum, int pageSize);
+
 }
