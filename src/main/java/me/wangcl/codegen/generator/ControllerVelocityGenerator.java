@@ -16,9 +16,16 @@ public class ControllerVelocityGenerator implements VelocityGenerator {
 		logger.info("generate() starts...");
 
 		String template = "templates/ControllerTemplate.vm";
+
 		String table = ((Table) context.get("table")).getCapitalName();
-		String file = "" + context.get("javaPath") + context.get("pkgController") + "/" + table + "Controller.java";
-		VelocityGeneratorUtils.generate(context, template, file);
+		String path = (String) context.get("javaPath");
+
+		boolean pathSwitch = "true".equals(context.get("pathSwitch").toString()) ? true : false;
+		if (pathSwitch) {
+			path += context.get("pkgController") + "/";
+		}
+
+		VelocityGeneratorUtils.generate(context, template, path + table + "Controller.java");
 
 		logger.info("generate() ends successfully.");
 	}

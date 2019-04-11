@@ -16,9 +16,16 @@ public class PojoEntityVelocityGenerator implements VelocityGenerator {
 		logger.info("generate() starts...");
 
 		String template = "templates/EntityTemplate.vm";
+
 		String table = ((Table) context.get("table")).getCapitalName();
-		String file = "" + context.get("javaPath") + context.get("pkgPojo") + "/" + table + ".java";
-		VelocityGeneratorUtils.generate(context, template, file);
+		String path = (String) context.get("javaPath");
+
+		boolean pathSwitch = "true".equals(context.get("pathSwitch").toString()) ? true : false;
+		if (pathSwitch) {
+			path += context.get("pkgPojo") + "/";
+		}
+
+		VelocityGeneratorUtils.generate(context, template, path + table + ".java");
 
 		logger.info("generate() ends successfully.");
 	}

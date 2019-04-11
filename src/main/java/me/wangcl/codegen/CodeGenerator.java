@@ -51,6 +51,7 @@ public final class CodeGenerator {
 	private String tablePrefix;
 
 	private String rootPackage;
+	private String pathSwitch;
 	private String pkgPojo;
 	private String pkgDao;
 	private String pkgService;
@@ -118,6 +119,14 @@ public final class CodeGenerator {
 
 	public void setOutputPath(String outputPath) {
 		this.outputPath = outputPath;
+	}
+
+	public String getPathSwitch() {
+		return pathSwitch;
+	}
+
+	public void setPathSwitch(String pathSwitch) {
+		this.pathSwitch = pathSwitch;
 	}
 
 	public void setPkgPojo(String pkgPojo) {
@@ -369,6 +378,7 @@ public final class CodeGenerator {
 
 		// 通用信息
 		context.put("author", author);
+		context.put("pathSwitch", pathSwitch);
 
 		// 数据库相关信息
 		context.put("dialect", dialect);
@@ -380,11 +390,17 @@ public final class CodeGenerator {
 		// 生成文件的路径
 		context.put("rootPackage", rootPackage);
 		String rootPackagePath = rootPackage.replace(".", "/") + "/";
-		context.put("javaPath", outputPath + "src/main/java/" + rootPackagePath);
-		context.put("resourcesPath", outputPath + "src/main/resources/" + rootPackagePath);
-		context.put("testJavaPath", outputPath + "src/test/java/" + rootPackagePath);
-		context.put("testJavaPath", outputPath + "src/test/java/" + rootPackagePath);
-		context.put("webJspPath", outputPath + "src/main/webapp/WEB-INF/jsp/" + table.getName() + "/");
+		if ("true".equals(pathSwitch)) {
+			context.put("javaPath", outputPath + "src/main/java/" + rootPackagePath);
+			context.put("resourcesPath", outputPath + "src/main/resources/" + rootPackagePath);
+			context.put("testJavaPath", outputPath + "src/test/java/" + rootPackagePath);
+			context.put("webJspPath", outputPath + "src/main/webapp/WEB-INF/jsp/" + table.getName() + "/");
+		} else {
+			context.put("javaPath", outputPath);
+			context.put("resourcesPath", outputPath);
+			context.put("testJavaPath", outputPath);
+			context.put("webJspPath", outputPath);
+		}
 
 		// Java程序包
 		context.put("pkgPojo", pkgPojo);
@@ -395,10 +411,13 @@ public final class CodeGenerator {
 	}
 
 	private void initFilePath() {
-		PathUtils.makeDirectory(outputPath + "src/");
-		PathUtils.makeDirectory(outputPath + "src/main/java/");
-		PathUtils.makeDirectory(outputPath + "src/main/resources/");
-		PathUtils.makeDirectory(outputPath + "src/test/java/");
-		PathUtils.makeDirectory(outputPath + "src/main/webapp/WEB-INF/jsp/");
+		PathUtils.makeDirectory(outputPath);
+		if ("true".equals(pathSwitch)) {
+			PathUtils.makeDirectory(outputPath + "src/");
+			PathUtils.makeDirectory(outputPath + "src/main/java/");
+			PathUtils.makeDirectory(outputPath + "src/main/resources/");
+			PathUtils.makeDirectory(outputPath + "src/test/java/");
+			PathUtils.makeDirectory(outputPath + "src/main/webapp/WEB-INF/jsp/");
+		}
 	}
 }

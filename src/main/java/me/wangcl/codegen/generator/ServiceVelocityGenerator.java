@@ -17,12 +17,19 @@ public class ServiceVelocityGenerator implements VelocityGenerator {
 
 		String serviceTemplate = "templates/ServiceTemplate.vm";
 		String serviceImplTemplate = "templates/ServiceImplTemplate.vm";
+
+		String servicePath = (String) context.get("javaPath");
+		String implPath = (String) context.get("javaPath");
 		String table = ((Table) context.get("table")).getCapitalName();
-		String serviceFile = "" + context.get("javaPath") + context.get("pkgService") + "/" + table + "Service.java";
-		String serviceImplFile = context.get("javaPath") + context.get("pkgServiceImpl").toString().replace(".",
-				"/") + "/" + table + "ServiceImpl.java";
-		VelocityGeneratorUtils.generate(context, serviceTemplate, serviceFile);
-		VelocityGeneratorUtils.generate(context, serviceImplTemplate, serviceImplFile);
+
+		boolean pathSwitch = "true".equals(context.get("pathSwitch").toString()) ? true : false;
+		if (pathSwitch) {
+			servicePath += context.get("pkgService") + "/";
+			implPath += context.get("pkgServiceImpl").toString().replace(".", "/") + "/";
+		}
+
+		VelocityGeneratorUtils.generate(context, serviceTemplate, servicePath + table + "Service.java");
+		VelocityGeneratorUtils.generate(context, serviceImplTemplate, implPath + table + "ServiceImpl.java");
 
 		logger.info("generate() ends successfully.");
 	}

@@ -81,6 +81,7 @@
 		<property name="pkgService" value="${package.service}"/>
 		<property name="pkgServiceImpl" value="${package.service.impl}"/>
 		<property name="pkgController" value="${package.controller}"/>
+		<property name="pathSwitch" value="${switch.path.generate}"/>
 
 		<property name="generators">
 			<list>

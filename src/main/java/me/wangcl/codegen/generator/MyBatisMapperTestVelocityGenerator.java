@@ -16,9 +16,16 @@ public class MyBatisMapperTestVelocityGenerator implements VelocityGenerator {
 		logger.info("generate() starts...");
 
 		String template = "templates/MapperTestTemplate.vm";
+
 		String table = ((Table) context.get("table")).getCapitalName();
-		String file = context.get("testJavaPath") + context.get("pkgDao").toString() + "/" + table + "MapperTest.java";
-		VelocityGeneratorUtils.generate(context, template, file);
+		String path = (String) context.get("testJavaPath");
+
+		boolean pathSwitch = "true".equals(context.get("pathSwitch").toString()) ? true : false;
+		if (pathSwitch) {
+			path += context.get("pkgDao").toString() + "/";
+		}
+
+		VelocityGeneratorUtils.generate(context, template, path + table + "MapperTest.java");
 
 		logger.info("generate() ends successfully.");
 	}

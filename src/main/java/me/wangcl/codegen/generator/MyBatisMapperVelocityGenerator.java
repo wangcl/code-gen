@@ -17,13 +17,19 @@ public class MyBatisMapperVelocityGenerator implements VelocityGenerator {
 
 		String javaTemplate = "templates/MapperTemplate.vm";
 		String xmlTemplate = "templates/MapperXmlTemplate.vm";
-		String table = ((Table) context.get("table")).getCapitalName();
-		String path = context.get("pkgDao").toString() + "/" + table + "Mapper";
-		String javaFile = context.get("javaPath") + path + ".java";
-		String xmlFile = context.get("resourcesPath") + path + ".xml";
 
-		VelocityGeneratorUtils.generate(context, javaTemplate, javaFile);
-		VelocityGeneratorUtils.generate(context, xmlTemplate, xmlFile);
+		String table = ((Table) context.get("table")).getCapitalName();
+		String javaPath = (String) context.get("javaPath");
+		String xmlPath = (String) context.get("resourcesPath");
+
+		boolean pathSwitch = "true".equals(context.get("pathSwitch").toString()) ? true : false;
+		if (pathSwitch) {
+			javaPath += context.get("pkgDao") + "/";
+			xmlPath += context.get("pkgDao") + "/";
+		}
+
+		VelocityGeneratorUtils.generate(context, javaTemplate, javaPath + table + "Mapper.java");
+		VelocityGeneratorUtils.generate(context, xmlTemplate, xmlPath + table + "Mapper.xml");
 
 		logger.info("generate() ends successfully.");
 	}
