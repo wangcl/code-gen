@@ -4,6 +4,7 @@ package ${rootPackage}.${pkgDao};
 import ${rootPackage}.${pkgPojo}.${table.capitalName};
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @author ${author}
  */
 @Mapper
+@Repository
 public interface ${table.capitalName}Mapper {
 
 	/**
